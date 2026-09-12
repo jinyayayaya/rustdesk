@@ -104,11 +104,7 @@ pub const LANGS: &[(&str, &str)] = &[
 ];
 
 pub(crate) fn cjk_ui_unavailable() -> bool {
-    cfg!(all(
-        target_os = "linux",
-        target_arch = "aarch64",
-        feature = "flutter"
-    ))
+    false
 }
 
 pub(crate) fn is_cjk_lang(lang_or_locale: &str) -> bool {
@@ -144,6 +140,9 @@ fn resolve_lang(saved_lang: &str, locale: &str, cjk_fallback: bool) -> String {
             .map(|x| x.split("_").next().unwrap_or_default())
             .unwrap_or_default()
             .to_owned();
+    }
+    if lang.is_empty() || lang == "c" || lang == "posix" {
+        lang = "zh-cn".to_owned();
     }
     if cjk_fallback && is_cjk_lang(&lang) {
         "en".to_owned()
