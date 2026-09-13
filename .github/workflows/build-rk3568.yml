@@ -193,10 +193,13 @@ jobs:
             cmake -B /opt/mpp/build -S /opt/mpp -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_TEST=OFF
             make -C /opt/mpp/build -j$(nproc)
             make -C /opt/mpp/build install
+            ldconfig
             
             # 2. Build static ffmpeg-rockchip
             echo "=== Building FFmpeg Rockchip ==="
-            export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/aarch64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH
+            export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/aarch64-linux-gnu/pkgconfig:${PKG_CONFIG_PATH:-}"
+            export LIBRARY_PATH="/usr/lib/aarch64-linux-gnu:${LIBRARY_PATH:-}"
+            export LD_LIBRARY_PATH="/usr/lib/aarch64-linux-gnu:${LD_LIBRARY_PATH:-}"
             git clone --depth=1 https://github.com/nyanmisaka/ffmpeg-rockchip.git /opt/ffmpeg-rockchip
             pushd /opt/ffmpeg-rockchip
             ./configure --prefix=/opt/ffmpeg-install \
