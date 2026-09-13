@@ -86,8 +86,9 @@ fn link_linux_arm64_hwcodec() {
         // Rockchip's FFmpeg build uses VA-API symbols for its RKMPP path. The
         // static FFmpeg archives do not carry this transitive dependency, so
         // keep it in the final RustDesk ELF explicitly.
-        println!("cargo:rustc-link-lib=va");
-        println!("cargo:rustc-link-lib=va-drm");
+        println!(
+            "cargo:rustc-link-arg=-Wl,--no-as-needed,-l:libva.so.2,-l:libva-drm.so.2,--as-needed"
+        );
     }
 }
 
