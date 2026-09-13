@@ -210,7 +210,7 @@ exclude = ["vdi/host", "examples/custom_plugin"]
 libxdo-sys = { path = "libs/libxdo-sys-stub" }
 
 [patch."https://github.com/rustdesk-org/hwcodec"]
-hwcodec = { git = "https://github.com/jinyayayaya/hwcodec", branch = "rkmpp" }
+hwcodec = { git = "https://github.com/jinyayayaya/hwcodec", rev = "1f45bc2" }
 
 [package.metadata.winres]
 LegalCopyright = "Copyright © 2026 Purslane Tech Pte. Ltd. All rights reserved."

@@ -235,6 +235,7 @@ jobs:
             pushd /workspace
             sed -i "s/\[\"cdylib\", \"staticlib\", \"rlib\"\]/\[\"cdylib\"\]/g" Cargo.toml
             export VCPKG_ROOT=/opt/artifacts/vcpkg
+            cargo update -p hwcodec || true
             cargo build --lib --jobs 4 --features hwcodec,flutter,unix-file-copy-paste --release
             cp -f target/release/librustdesk.so /workspace/librustdesk.so
             rm -rf target/release/deps target/release/build
