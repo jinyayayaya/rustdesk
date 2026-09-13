@@ -87,7 +87,7 @@ fn link_linux_arm64_hwcodec() {
         // static FFmpeg archives do not carry this transitive dependency, so
         // keep it in the final RustDesk ELF explicitly.
         println!(
-            "cargo:rustc-link-arg=-Wl,--no-as-needed,-l:libva.so.2,-l:libva-drm.so.2,--as-needed"
+            "cargo:rustc-link-arg=-Wl,--no-as-needed,-l:libva.so.2,-l:libva-drm.so.2,-l:libva-x11.so.2,--as-needed"
         );
     }
 }

@@ -240,6 +240,7 @@ jobs:
             echo "=== Verifying runtime codec dependencies ==="
             readelf -d target/release/liblibrustdesk.so | grep -q 'libva.so.2'
             readelf -d target/release/liblibrustdesk.so | grep -q 'libva-drm.so.2'
+            readelf -d target/release/liblibrustdesk.so | grep -q 'libva-x11.so.2'
             cp -f target/release/liblibrustdesk.so /workspace/librustdesk.so
             rm -rf target/release/deps target/release/build
             rm -rf ~/.cargo
