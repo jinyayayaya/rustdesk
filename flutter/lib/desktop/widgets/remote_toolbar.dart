@@ -911,7 +911,11 @@ class _RemoteToolbarState extends State<RemoteToolbar> {
         style: ButtonStyle(
           minimumSize: MaterialStatePropertyAll(Size(64, 32)),
           textStyle: MaterialStatePropertyAll(
-            TextStyle(fontWeight: FontWeight.normal),
+            TextStyle(
+              fontWeight: FontWeight.normal,
+              fontFamily: 'Noto Sans CJK SC',
+              fontFamilyFallback: const ['WenQuanYi Micro Hei'],
+            ),
           ),
           shape: MaterialStatePropertyAll(RoundedRectangleBorder(
               borderRadius:
