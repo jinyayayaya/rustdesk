@@ -77,9 +77,24 @@ fn install_android_deps() {
     println!("cargo:rustc-link-lib=OpenSLES");
 }
 
+fn link_linux_arm64_hwcodec() {
+    let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap();
+    let target_arch = std::env::var("CARGO_CFG_TARGET_ARCH").unwrap();
+    let hwcodec_enabled = std::env::var_os("CARGO_FEATURE_HWCODEC").is_some();
+
+    if target_os == "linux" && target_arch == "aarch64" && hwcodec_enabled {
+        // Rockchip's FFmpeg build uses VA-API symbols for its RKMPP path. The
+        // static FFmpeg archives do not carry this transitive dependency, so
+        // keep it in the final RustDesk ELF explicitly.
+        println!("cargo:rustc-link-lib=va");
+        println!("cargo:rustc-link-lib=va-drm");
+    }
+}
+
 fn main() {
     hbb_common::gen_version();
     install_android_deps();
+    link_linux_arm64_hwcodec();
     #[cfg(all(windows, feature = "inline"))]
     build_manifest();
     #[cfg(windows)]

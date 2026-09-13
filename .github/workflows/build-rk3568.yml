@@ -237,6 +237,9 @@ jobs:
             export VCPKG_ROOT=/opt/artifacts/vcpkg
             cargo update -p hwcodec || true
             cargo build --lib --jobs 4 --features hwcodec,flutter,unix-file-copy-paste --release
+            echo "=== Verifying runtime codec dependencies ==="
+            readelf -d target/release/liblibrustdesk.so | grep -q 'libva.so.2'
+            readelf -d target/release/liblibrustdesk.so | grep -q 'libva-drm.so.2'
             cp -f target/release/liblibrustdesk.so /workspace/librustdesk.so
             rm -rf target/release/deps target/release/build
             rm -rf ~/.cargo
