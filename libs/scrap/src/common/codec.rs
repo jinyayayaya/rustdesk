@@ -773,10 +773,8 @@ impl Decoder {
         let mut ret = false;
         for h264 in frames.frames.iter() {
             for image in decoder.decode(&h264.data)? {
-                // TODO: just process the last frame
-                if image.to_fmt(rgb, i420).is_ok() {
-                    ret = true;
-                }
+                image.to_fmt(rgb, i420)?;
+                ret = true;
             }
         }
         return Ok(ret);

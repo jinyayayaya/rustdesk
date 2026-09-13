@@ -1606,23 +1606,30 @@ impl VideoHandler {
                     pixelbuffer,
                     chroma,
                 );
-                if res.as_ref().is_ok_and(|x| *x) {
-                    self.fail_counter = 0;
-                } else {
-                    if self.fail_counter < usize::MAX {
-                        if self.first_frame && self.fail_counter < MAX_DECODE_FAIL_COUNTER {
-                            log::error!("decode first frame failed");
-                            self.fail_counter = MAX_DECODE_FAIL_COUNTER;
-                        } else {
+                match res.as_ref() {
+                    Ok(true) => {
+                        self.fail_counter = 0;
+                        self.first_frame = false;
+                    }
+                    Ok(false) => {
+                        // A decoder may consume a packet without producing a
+                        // frame yet, e.g. while RKMPP processes its first
+                        // info-change packet. Do not disable that decoder.
+                    }
+                    Err(_) => {
+                        if self.fail_counter < usize::MAX {
+                            if self.first_frame {
+                                log::error!("decode first frame failed");
+                            }
                             self.fail_counter += 1;
+                            log::error!(
+                                "Failed to handle video frame, fail counter: {}",
+                                self.fail_counter
+                            );
                         }
-                        log::error!(
-                            "Failed to handle video frame, fail counter: {}",
-                            self.fail_counter
-                        );
+                        self.first_frame = false;
                     }
                 }
-                self.first_frame = false;
                 if self.record {
                     self.recorder.lock().unwrap().as_mut().map(|r| {
                         let (w, h) = if *pixelbuffer {
