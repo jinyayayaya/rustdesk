@@ -375,6 +375,11 @@ class MyTheme {
     // https://stackoverflow.com/questions/77537315/after-upgrading-to-flutter-3-16-the-app-bar-background-color-button-size-and
     useMaterial3: false,
     brightness: Brightness.light,
+    // The Linux Flutter engine does not reliably fall back to the system CJK
+    // font for every text widget. Use the installed Simplified Chinese font
+    // as the primary family so translated UI text has glyphs.
+    fontFamily: 'Noto Sans CJK SC',
+    fontFamilyFallback: const ['WenQuanYi Micro Hei'],
     hoverColor: Color.fromARGB(255, 224, 224, 224),
     scaffoldBackgroundColor: Colors.white,
     dialogBackgroundColor: Colors.white,
@@ -473,6 +478,8 @@ class MyTheme {
   static ThemeData darkTheme = ThemeData(
     useMaterial3: false,
     brightness: Brightness.dark,
+    fontFamily: 'Noto Sans CJK SC',
+    fontFamilyFallback: const ['WenQuanYi Micro Hei'],
     hoverColor: Color.fromARGB(255, 45, 46, 53),
     scaffoldBackgroundColor: Color(0xFF18191E),
     dialogBackgroundColor: Color(0xFF18191E),
