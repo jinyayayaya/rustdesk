@@ -237,7 +237,7 @@ jobs:
             export VCPKG_ROOT=/opt/artifacts/vcpkg
             cargo update -p hwcodec || true
             cargo build --lib --jobs 4 --features hwcodec,flutter,unix-file-copy-paste --release
-            cp -f target/release/librustdesk.so /workspace/librustdesk.so
+            cp -f target/release/liblibrustdesk.so /workspace/librustdesk.so
             rm -rf target/release/deps target/release/build
             rm -rf ~/.cargo
             popd
@@ -258,21 +258,25 @@ jobs:
               bin/flutter-elinux doctor -v
               bin/flutter-elinux precache --linux
             popd
-            cp -R flutter/bin/cache/artifacts/engine/linux-x64/shader_lib flutter-elinux/flutter/bin/cache/artifacts/engine/linux-arm64
+            mkdir -p flutter-elinux/flutter/bin/cache/artifacts/engine/linux-arm64
+            cp -R flutter/bin/cache/artifacts/engine/linux-x64/shader_lib flutter-elinux/flutter/bin/cache/artifacts/engine/linux-arm64/ || true
             rm -rf flutter
             popd
 
             pushd /opt/flutter-elinux/flutter
-            git apply ${{ github.workspace }}/.github/patches/flutter_3.24.4_dropdown_menu_enableFilter.diff || true
+            git apply /workspace/.github/patches/flutter_3.24.4_dropdown_menu_enableFilter.diff || true
             popd
 
             # 6. Build package
             pushd /workspace
+            sed -i "s/ffi.NativeFunction<ffi.Bool Function(DartPort/ffi.NativeFunction<ffi.Uint8 Function(DartPort/g" flutter/lib/generated_bridge.dart || true
             export CARGO_INCREMENTAL=0
             export DEB_ARCH=arm64
             python3 ./build.py --flutter --skip-cargo
-            for name in rustdesk*??.deb; do
-              mv "$name" "${name%%.deb}-arm64.deb"
+            for name in rustdesk*.deb; do
+              if [[ "$name" != *-arm64.deb ]]; then
+                mv "$name" "${name%.deb}-arm64.deb"
+              fi
             done
             ls -lh *.deb /workspace/librustdesk.so
             popd
